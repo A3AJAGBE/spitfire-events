@@ -14,7 +14,7 @@ def add_provider():
 
 
 # Get events based on event id
-@events.route("/api/events/string:event_id", methods=["GET"])
+@events.route("/<event_id>", methods=["GET"])
 def get_event(event_id):
     try:
         event = query_one_filtered(events, id=event_id)
