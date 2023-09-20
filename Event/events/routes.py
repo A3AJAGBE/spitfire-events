@@ -26,7 +26,7 @@ def get_event(event_id):
             return jsonify({
                 "error": "An error occured",
                 "error_message": error
-                }), 500
+                }), 404
 
 
 @events.route("/<id>", methods=["DELETE"])
