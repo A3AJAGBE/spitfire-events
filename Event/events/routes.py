@@ -24,16 +24,5 @@ def delete_event(id):
 #Get all events
 @events.route("/", methods=["GET"])
 def all_events():
-    try:
-        all_events = query_all(Events)
-        if not all_events:
-            # No events found
-            return jsonify({"message": "No events found"}), 404
-        return jsonify(all_events.format()), 200
-    
-    except Exception as e:
-        else:
-            return jsonify({
-                "error": "An error occured",
-                "error_message": str(e)
-                }), 400
+    all_events = query_all(Events)
+    return jsonify(all_events.format()), 200
