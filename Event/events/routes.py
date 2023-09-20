@@ -9,7 +9,7 @@ from Event.utils import (
 events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
 
 
-
+#Delete event by id
 @events.route("/<id>", methods=["DELETE"])
 def delete_event(id):
     try:
