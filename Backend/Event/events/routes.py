@@ -7,16 +7,12 @@ from Event.utils import (
 )
 from Event import db
 from datetime import datetime, date
-# from bson import json_util
-import json
 
 
-# import datetime
-
-events = Blueprint("events", __name__, url_prefix="/events")#url_prefix includes /events before all endpoints in blueprint
+events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
 
 
-@events.route("/api/events", methods=["POST"])
+@events.route("", methods=["POST"])
 def create_event():
 
 
@@ -30,8 +26,8 @@ def create_event():
     thumbnail = request.json['thumbnail']
     creator = request.json['creator']
     
-    date1 = datetime.strptime(start_date, '%Y-%m-%d')
-    date2 = datetime.strptime(end_date, '%Y-%m-%d')
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
     start_time = datetime.strptime(start_time,'%H:%M:%S')
     end_time = datetime.strptime(end_time,'%H:%M:%S')
@@ -39,57 +35,21 @@ def create_event():
 
     event = Event(title=title,description=description,location=location,start_date=start_date,
                 start_time=start_time,end_date=end_date,end_time=end_time,thumbnail=thumbnail,creator=creator)
-    event.insert()   
-    # try:
-    #     event.insert()
-    # except:
-    #     return {"message": "An error occurred craeting the event."}, 400
-    # return jsonify({
-    #     'msg': "Event Created",
-    #     'event': result }), 201 
-    result = format(event)
-    print(type(result))   
-    return jsonify(result), 201
+    result = format(event)            
+    try:
+        event.insert()
+    except:
+        return {"message": "An error occurred creating the event."}, 400
+    return jsonify({
+        'msg': "Event Created",
+        'event': result }), 201 
+
+    # event.insert()   
+    # result = format(event)
     # print(type(result))   
     # return jsonify(result), 201
+   
 
-
-@events.route("/api/events", methods=["GET"])
-def all_event():
-
-    event = query_all(Event)
-    if not event:
-        return {"msg": "No event found."}, 400
-    events = format(event)   
-    return jsonify(events), 200
-    
-    # return jsonify({
-    #     'msg': "All Events",
-    #     'event': events }), 200
-    # return jsonify(events), 200
-
-
-@events.route("/api/events/<id>", methods=["GET"])
-def event(id):
-
-    event = query_one_filtered(Event).first()
-    if event is None:
-        return ({"msg": "Event not found"}), 404
-    result =  event.format()
-    return jsonify(result), 201
-
-    # return json.dumps(result, default=default)
-    # return jsonify({
-    #     'msg': "Event Details",
-    #     'event': result }), 200   
-
-
-@events.route("/api/events/<int:id>", methods=["PUT"])
-def update_event(id):
-
-    event = query_one_filtered(Event)
-    if not event:
-        return ({"msg": "Event not found"}), 404
 
 
 
