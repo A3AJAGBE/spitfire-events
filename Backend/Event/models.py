@@ -2,7 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 from Event import db
 from uuid import uuid4
 
-
 def get_uuid():
     # generates unique id
     return uuid4().hex
@@ -62,10 +61,10 @@ class Event(db.Model):
     creator = db.Column(db.String(60), db.ForeignKey(
         "users.id"), nullable=False)
     location = db.Column(db.String(1024), nullable=False)
-    start_date = db.Column(db.Date(), nullable=False)
-    start_time = db.Column(db.Time(), nullable=False)
-    end_date = db.Column(db.Date(), nullable=False)
-    end_time = db.Column(db.Time(), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     thumbnail = db.Column(db.String(255), nullable=False)
 
     def __init__(self, title, description, creator, location, start_date, start_time, end_date, end_time, thumbnail):
