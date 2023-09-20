@@ -17,7 +17,7 @@ def add_provider():
 @events.route("/<event_id>", methods=["GET"])
 def get_event(event_id):
     try:
-        event = query_one_filtered(events, id=event_id)
+        event = query_one_filtered(table=Events, id=event_id)
         return jsonify(event.format()), 200
     except Exception as error:
         if not event:
