@@ -22,7 +22,7 @@ def all_events():
     except Exception as e:
         if not all_events:
             # No events found
-            return jsonify({"message": "No events found"}), 404
+            return jsonify({"message": "Event not found"}), 404
         else:
             return jsonify({
                 "error": "An error occured",
