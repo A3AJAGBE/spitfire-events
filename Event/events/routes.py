@@ -20,15 +20,8 @@ def get_event(event_id):
         event = query_one_filtered(table=Events, id=event_id)
         return jsonify(event.format()), 200
     except Exception as error:
-        if not event:
-            return jsonify({"error": "Event not found"}), 404
-        else:
-            return jsonify({
-                "error": "An error occured",
-                "error_message": error
-                }), 404
-
-
+        return jsonify({"error": "Event not found"}), 404
+        
 @events.route("/<id>", methods=["DELETE"])
 def delete_event(id):
     try:
