@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify
-from Event.models import User
+from Event.models import Users, Events
 from Event.utils import (
-    query_one_filtered,
-    query_paginate_filtered,
-    query_paginated,
+    query_one_filtered
 )
-from Event import db
 
-events = Blueprint("events", __name__, url_prefix="/events")#url_prefix includes /events before all endpoints in blueprint
+
+events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
 
 
 @events.route("/", methods=["POST"])
@@ -16,10 +14,10 @@ def add_provider():
 
 
 # Get events based on event id
-@events.route("/api/events/<string:eventId>", methods=["GET"])
-def get_event(eventId):
+@events.route("/api/events/string:event_id", methods=["GET"])
+def get_event(event_id):
     try:
-        event = query_one_filtered(events, id=eventId)
+        event = query_one_filtered(events, id=event_id)
         return jsonify(event.format()), 200
     except Exception as error:
         if not event:
@@ -29,3 +27,16 @@ def get_event(eventId):
                 "error": "An error occured",
                 "error_message": error
                 }), 500
+
+
+@events.route("/<id>", methods=["DELETE"])
+def delete_event(id):
+    try:
+        del_event = query_one_filtered(table=Events, id=id)
+
+        if del_event:
+            del_event.delete()
+            return jsonify(response={"success": "Event deleted"}), 204
+    except Exception as error:
+        return jsonify(error={"Not Found": "Event not found"}), 404
+
