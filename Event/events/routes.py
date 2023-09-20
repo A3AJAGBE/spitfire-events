@@ -28,4 +28,3 @@ def all_events():
                 "error": "An error occured",
                 "error_message": e
                 }), 400
-        
