@@ -9,6 +9,9 @@ from Event.utils import (
 )
 from Event.models import Images
 from Event.models import Comments
+from Event.models.images import Images
+from Event.models.comments import Comments
+
 from Event.utils import query_all_filtered
 
 events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
@@ -54,7 +57,9 @@ def add_comments(event_id):
             user_id = data.get("user_id")
             body = data.get("body")
             image_url_list = data.get("image_url_list", None)
-            new_comment = Comments(event_id=event_id, user_id=user_id, body=body)
+            new_comment = Comments(
+                event_id=event_id, user_id=user_id, body=body
+            )
             new_comment.insert()
             # save images if they exist
             if image_url_list is not None:
@@ -84,7 +89,7 @@ def add_comments(event_id):
                 jsonify(
                     {
                         "status": "failed",
-                        "message": "Comment data could not be saved, an error occured",
+                        "message": "Error: Comment data could not be saved",
                     }
                 ),
                 400,
