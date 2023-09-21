@@ -18,6 +18,18 @@ from Event.utils import query_all_filtered
 events = Blueprint("events", __name__, url_prefix="/api/events")
 >>>>>>> origin/main
 
+#Get all events
+@events.route("/", methods=["GET"])
+def all_events():
+    """Get all events
+
+    Returns:
+        str: the id of the newly created comment for POST
+    """
+
+    all_events = query_all(Events)
+    return jsonify(all_events.format()), 200
+
 
 # POST /api/events/<str:event_id>/comments: Add a comment to an event
 # GET /api/events/<str:event_id>/comments: Get comments for an event
@@ -28,7 +40,7 @@ def add_comments(event_id):
         event_id (str): The id of the event causing the discussion
 
     Returns:
-        str: the id of the newly created comment for POST
+        json: all events
 
 <<<<<<< HEAD
 #Delete event by id
@@ -97,12 +109,6 @@ def delete_event(id):
     except Exception as error:
 <<<<<<< HEAD
         return jsonify(error={"Not Found": "Event not found"}), 404
-
-#Get all events
-@events.route("/", methods=["GET"])
-def all_events():
-    all_events = query_all(Events)
-    return jsonify(all_events.format()), 200
 =======
         print(f"{type(error).__name__}: {error}")
         return (
