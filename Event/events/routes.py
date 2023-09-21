@@ -3,12 +3,39 @@
 """
 # pylint: disable=unused-import
 from flask import Blueprint, request, jsonify
+from Event.models import Users, Events
+from Event.utils import (
+    query_one_filtered
+)
+from Event.models import Images
+from Event.models import Comments
 from Event.models.images import Images
 from Event.models.comments import Comments
+
 from Event.utils import query_all_filtered
 
-# url_prefix includes /api/events before all endpoints in blueprint
-events = Blueprint("events", __name__, url_prefix="/api/events")
+events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
+
+# Get event based on event id
+@events.route("/<event_id>", methods=["GET"])
+def get_event(event_id):
+    try:
+        event = query_one_filtered(table=Events, id=event_id)
+        return jsonify(event.format()), 200
+    except Exception as error:
+        return jsonify({"error": "Event not found"}), 404
+        
+
+@events.route("/<id>", methods=["DELETE"])
+def delete_event(id):
+    try:
+        del_event = query_one_filtered(table=Events, id=id)
+
+        if del_event:
+            del_event.delete()
+            return jsonify(response={"success": "Event deleted"}), 204
+    except Exception as error:
+        return jsonify(error={"Not Found": "Event not found"}), 404
 
 
 # POST /api/events/<str:event_id>/comments: Add a comment to an event

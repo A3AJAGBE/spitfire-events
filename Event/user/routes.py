@@ -4,6 +4,8 @@ Module containing user-related routes for the Events-App, Team Spitfire.
 
 from flask import Blueprint, request
 from Event.models.groups import Groups
+from Event.models.users import Users
+
 
 # from Event.utils import query_paginate_filtered, query_one_filtered
 
@@ -33,3 +35,23 @@ def create_group():
     title = request.form.get("title")
     new_group = Groups(title=title)
     new_group.insert()
+
+
+"""
+@users.route("/<string:userid>/interests/<string:eventid>", methods=["DELETE"])
+def delete_user_interest(userid, eventid):
+    DELETE interest from event endpoint
+    Args:
+        userid: id of user deleting interest
+        eventid: id of event interest is deleted from
+    Returns:
+        Returns a tuple with  error message and status code
+    
+    :
+        interest = query_one_filtered(table=Interests, user_id=userid, event_id=eventid)
+        if interest:
+            interest.delete()
+            return jsonify(response={"success": "interest deleted"}), 204
+    except Exception as error:
+        return jsonify(error={"Not Found": "Interest not found"}), 404
+"""
