@@ -13,12 +13,6 @@ from Event.utils import query_all_filtered
 
 events = Blueprint("events", __name__, url_prefix="/api/events")#url_prefix includes /events before all endpoints in blueprint
 
-
-@events.route("/", methods=["POST"])
-def add_provider():
-    return
-
-
 # Get event based on event id
 @events.route("/<event_id>", methods=["GET"])
 def get_event(event_id):
