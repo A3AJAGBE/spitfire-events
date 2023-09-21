@@ -13,7 +13,7 @@ def add_provider():
     return
 
 
-# Get events based on event id
+# Get event based on event id
 @events.route("/<event_id>", methods=["GET"])
 def get_event(event_id):
     try:
