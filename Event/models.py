@@ -5,18 +5,20 @@
     """
 
 # pylint: disable=unused-import
+# pylint: disable=C0103
+# pylint: disable=W0622
 from uuid import uuid4
-from flask_sqlalchemy import SQLAlchemy
 from Event import db
+from Event import sess
+
 
 
 def get_uuid():
-    """_summary_
+    """generates unique id
 
     Returns:
         _type_: _description_
     """
-    # generates unique id
     return uuid4().hex
 
 
@@ -32,23 +34,21 @@ class Users(db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(
-        db.String(60), primary_key=True, unique=True, default=get_uuid, nullable=False
-    )
+    id = db.Column(db.String(60), primary_key=True, unique=True, nullable=False)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    access_token = db.Column(db.String(120), nullable=True)
-    refresh_token = db.Column(db.String(120), nullable=True)
     avatar = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, name, email, avatar):
+    def __init__(self,id,name, email, avatar):
         """_summary_
 
         Args:
+            id (_type_): _description
             name (_type_): _description_
             email (_type_): _description_
             avatar (_type_): _description_
         """
+        self.id = id
         self.name = name
         self.email = email
         self.avatar = avatar
@@ -59,7 +59,7 @@ class Users(db.Model):
         Returns:
             _type_: _description_
         """
-        return f"Name: {self.name}, Email: {self.email}"
+        return f"Id: {self.id}, Name: {self.name}, Email: {self.email}"
 
     # safely add record/object to db
     def insert(self):
@@ -86,7 +86,6 @@ class Users(db.Model):
             _type_: _description_
         """
         return {
-            "id": self.id,
             "name": self.name,
             "email": self.email,
             "avatar": self.avatar,
@@ -170,6 +169,7 @@ class Events(db.Model):
         """_summary_"""
         db.session.add(self)
         db.session.commit()
+       
 
     # safely update record/object to db
     def update(self):
@@ -215,9 +215,9 @@ class Groups(db.Model):
 
     __tablename__ = "groups"
 
-    group_id = db.Column(
-        db.String(36), primary_key=True, default=get_uuid, unique=True, nullable=False
-    )
+
+    id = db.Column(db.String(36), primary_key=True, default=get_uuid, unique=True,
+                         nullable=False)
     title = db.Column(db.String(100), nullable=False)
 
     def __init__(self, title):
@@ -234,7 +234,7 @@ class Groups(db.Model):
         Returns:
             _type_: _description_
         """
-        return f"Group ID: {self.group_id}, Title: {self.title}"
+        return f'Group ID: {self.id}, Title: {self.title}'
 
     def insert(self):
         """_summary_"""
@@ -256,7 +256,10 @@ class Groups(db.Model):
         Returns:
             _type_: _description_
         """
-        return {"id": self.group_id, "title": self.title}
+        return {
+            "id": self.id,
+            "title": self.title
+        }
 
 
 class Comments(db.Model):
@@ -308,10 +311,9 @@ class Comments(db.Model):
     body = db.Column(db.String(1000), nullable=False)
 
     # Add relationships to Event and User models
-
-    event = db.relationship("Event", backref=db.backref("comments", lazy=True))
-    user = db.relationship("User", backref=db.backref("comments", lazy=True))
-    images = db.relationship("Image", backref="comment", lazy="dynamic")
+    event = db.relationship('Events', backref=db.backref('comments', lazy=True))
+    user = db.relationship('Users', backref=db.backref('comments', lazy=True))
+    images = db.relationship('Images', backref='comments', lazy='dynamic')
 
     def __init__(self, event_id, user_id, body):
         """_summary_
@@ -402,8 +404,6 @@ class Images(db.Model):
     comment_id = db.Column(db.String(36), db.ForeignKey("comments.id"), nullable=False)
     image_url = db.Column(db.String(255), nullable=False)
 
-    # Relationship
-    comment = db.relationship("Comment", back_populates="images")
 
     def __init__(self, comment_id, image_url):
         """_summary_
@@ -450,11 +450,14 @@ class Images(db.Model):
         }
 
 
+
 class UserGroups(db.Model):
     """
     Model Schema for usergroups.
 
     Attributes:
+        id (str):
+            Primary key for the table.
         user_id (str):
             Foreign key for the user table.
         group_id (str):
@@ -480,14 +483,11 @@ class UserGroups(db.Model):
 
     __tablename__ = "usergroups"
 
-    # creating a temporary primary key for user group
-    id = db.Column(
-        db.String(60), primary_key=True, default=get_uuid
-    )  # Primary Table Key
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
-    group_id = db.Column(
-        db.String(36), db.ForeignKey("groups.group_id"), nullable=False
-    )
+    id = db.Column(db.String, primary_key=True, default=get_uuid)
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'),
+                        nullable=False)
+    group_id = db.Column(db.String(36), db.ForeignKey('groups.id'),
+                         nullable=False)
 
     def __init__(self, user_id, group_id):
         """_summary_
@@ -505,7 +505,7 @@ class UserGroups(db.Model):
         Returns:
             _type_: _description_
         """
-        return f"user_id: {self.user_id}, group_id: {self.group_id}"
+        return f'id: {self.id} , user_id: {self.user_id}, group_id: {self.group_id}'
 
     def insert(self):
         """_summary_"""
@@ -527,4 +527,8 @@ class UserGroups(db.Model):
         Returns:
             _type_: _description_
         """
-        return {"user_id": self.user_id, "group_id": self.group_id}
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "group_id": self.group_id
+        }

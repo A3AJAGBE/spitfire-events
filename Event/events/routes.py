@@ -19,7 +19,6 @@ events = Blueprint("events", __name__, url_prefix="/api/events")
 @events.route("", methods=["POST"])
 def create_event():
 
-
     title = request.json['title']
     description = request.json['description']
     location = request.json['location']
@@ -36,10 +35,9 @@ def create_event():
     start_time = datetime.strptime(start_time,'%H:%M:%S')
     end_time = datetime.strptime(end_time,'%H:%M:%S')
 
-
-    # event = Events(title=title,description=description,location=location,start_date=start_date,
-    #             start_time=start_time,end_date=end_date,end_time=end_time,thumbnail=thumbnail,creator=creator)
-    event = Events(title,description,location,start_date,start_time,end_date,end_time,thumbnail,creator)
+    event = Events(title=title,description=description,location=location,start_date=start_date,
+                start_time=start_time,end_date=end_date,end_time=end_time,thumbnail=thumbnail,creator=creator)
+    # event = Events(title,description,location,start_date,start_time,end_date,end_time,thumbnail,creator)
     result = format(event)            
     try:
         event.insert()
@@ -47,7 +45,7 @@ def create_event():
         return {"message": "An error occurred creating the event."}, 400
     return jsonify({
         'msg': "Event Created",
-        'event': result }), 201 
+        'event': result }), 201         
 
     # event.insert()   
     # result = format(event)
