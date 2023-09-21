@@ -3,12 +3,32 @@
 """
 # pylint: disable=unused-import
 from flask import Blueprint, request, jsonify
+<<<<<<< HEAD
+from Event.models import Users, Events
+from Event.utils import (
+    query_one_filtered,
+    query_all
+)
+=======
 from Event.models.images import Images
 from Event.models.comments import Comments
 from Event.utils import query_all_filtered
 
 # url_prefix includes /api/events before all endpoints in blueprint
 events = Blueprint("events", __name__, url_prefix="/api/events")
+>>>>>>> origin/main
+
+#Get all events
+@events.route("/", methods=["GET"])
+def all_events():
+    """Get all events
+
+    Returns:
+        str: the id of the newly created comment for POST
+    """
+
+    all_events = query_all(Events)
+    return jsonify(all_events.format()), 200
 
 
 # POST /api/events/<str:event_id>/comments: Add a comment to an event
@@ -20,8 +40,13 @@ def add_comments(event_id):
         event_id (str): The id of the event causing the discussion
 
     Returns:
-        str: the id of the newly created comment for POST
+        json: all events
 
+<<<<<<< HEAD
+#Delete event by id
+@events.route("/<id>", methods=["DELETE"])
+def delete_event(id):
+=======
         list: a list of all comments attached to an event
     """
     if request.method == "POST":
@@ -69,6 +94,7 @@ def add_comments(event_id):
             )
 
     # GET comments
+>>>>>>> origin/main
     try:
         all_comments = query_all_filtered("comments", event_id=event_id)
         return jsonify(
@@ -81,6 +107,9 @@ def add_comments(event_id):
             }
         )
     except Exception as error:
+<<<<<<< HEAD
+        return jsonify(error={"Not Found": "Event not found"}), 404
+=======
         print(f"{type(error).__name__}: {error}")
         return (
             jsonify(
@@ -91,3 +120,4 @@ def add_comments(event_id):
             ),
             400,
         )
+>>>>>>> origin/main
