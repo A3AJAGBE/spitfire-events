@@ -53,17 +53,6 @@ def update_group(group_id):
         return jsonify({"error": str(error)}), 500
 
 
-@groups.route("/")
-def get_active_signals():
-    """
-        Retrieve and return active signals.
-
-    Returns:
-        str: A placeholder return value.
-    """
-    return
-
-
 
 @groups.route("/api/groups/<group_id>/members/<user_id>", methods=["DELETE"])
 def remove_group_member(group_id, user_id):
