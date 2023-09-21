@@ -6,7 +6,7 @@ from flask import Blueprint, request, jsonify
 from Event.models.images import Images
 from Event.models.comments import Comments
 from Event.utils import query_all_filtered
-from Event.models import Events
+from Event.models.events import Events
 
 # url_prefix includes /api/events before all endpoints in blueprint
 events = Blueprint("events", __name__, url_prefix="/api/events")
