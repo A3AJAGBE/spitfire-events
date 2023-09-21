@@ -9,6 +9,8 @@
 # pylint: disable=W0622
 from uuid import uuid4
 from Event import db
+from Event import sess
+
 
 
 def get_uuid():
@@ -167,6 +169,7 @@ class Events(db.Model):
         """_summary_"""
         db.session.add(self)
         db.session.commit()
+       
 
     # safely update record/object to db
     def update(self):
